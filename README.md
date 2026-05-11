@@ -1,259 +1,121 @@
+# Customer User Journey Dashboard
 
-# Customer User Journey Analytics Platform
+![Dashboard Preview](screenshots/customer_user_journey_dashboard.png)
 
 ## Executive Summary
+This project analyzes a customer journey dashboard for a Data Analyst (Healthcare & Tech) with Product Analytics skills. The dashboard connects funnel progression, retention, churn risk, acquisition channel performance, and segment revenue into a decision-ready product analytics case study.
 
-This project presents a complete Product Analytics and Customer Journey Intelligence platform designed to monitor user behavior, retention, funnel conversion, revenue performance, and churn risk across a digital product ecosystem.
+## Business Problem
+The business needs to identify where customers drop off, which channels convert best, which segments create revenue, and whether retention is strong enough to support sustainable growth.
 
-The dashboard simulates how product and business teams use analytics to improve:
-- Funnel conversion
-- Customer retention
-- Revenue optimization
-- User engagement
-- Product growth decisions
+## KPI Goals
+| KPI | Value | Why It Matters |
+|---|---:|---|
+| Total Users | 800 | Measures product reach |
+| Conversion Rate | 25.00% | Measures journey success from Awareness to Purchase |
+| D1 Retention | 66.62% | Measures early user engagement |
+| D7 Retention | 36.62% | Measures sustained engagement |
+| Revenue per User | $25.58 | Measures monetization efficiency |
 
-This repository demonstrates:
-- Product Analytics thinking
-- Funnel & Retention Analysis
-- KPI Monitoring
-- Experimentation Readiness
-- Executive Decision Support
-- Modern Analytics Workflow maturity
+## Dataset
+The dataset contains 2,240 journey-level event rows with customer, date, country, device, segment, acquisition channel, churn risk, revenue, retention flags, and funnel stage fields.
 
----
-
-# Business Problem
-
-A digital commerce platform needed visibility into:
-- User journey drop-offs
-- Funnel abandonment
-- Low D7 retention
-- Revenue performance by segment
-- Churn risk distribution
-- Channel conversion efficiency
-
-The company wanted a centralized analytics solution to:
-1. Identify friction points in the user journey
-2. Improve conversion rates
-3. Increase long-term retention
-4. Reduce churn risk
-5. Optimize acquisition channels
-6. Improve revenue generation
-
----
-
-# KPI Goals
-
-| KPI | Goal |
-|---|---|
-| Conversion Rate | Increase purchase completion |
-| D1 Retention | Improve onboarding engagement |
-| D7 Retention | Improve long-term retention |
-| Revenue Per User | Increase monetization |
-| Funnel Drop-off | Reduce abandonment |
-| Churn Risk | Reduce high-risk users |
-
----
-
-# Dataset
-
-The dataset contains:
-- User journey stages
-- Device segmentation
-- Country segmentation
-- Customer segments
-- Retention metrics
-- Revenue metrics
-- Risk categories
-- Funnel activity
-
----
-
-# SQL Transformations
-
-The project includes SQL workflows for:
-- Funnel conversion calculations
-- Retention analysis
-- Revenue segmentation
-- Churn risk distribution
-- Channel conversion analysis
-- KPI aggregation
-
----
-
-# Metrics Engineering
-
-Metrics engineered:
-- Conversion Rate
-- D1 Retention
-- D7 Retention
-- Revenue Per User
-- Funnel Drop-off %
-- Risk Distribution %
-- Segment Revenue Contribution
-
----
-
-# Analytics Workflow
-
-```text
-Raw Data
-   ↓
-SQL Cleaning & Aggregation
-   ↓
-Metrics Engineering
-   ↓
-Exploratory Analysis
-   ↓
-Dashboard Visualization
-   ↓
-Insights & Recommendations
-   ↓
-Decision Support
-```
-
----
-
-# Dashboard Preview
-
-Dashboard Components:
-- Funnel Chart
-- Drop-off Analysis
-- Retention Trend
-- Churn Risk Distribution
-- Conversion by Channel
-- Revenue by Segment
-- KPI Scorecards
-- Executive Insight Panel
-
----
-
-# Product Insights
-
-## Insight 1
-Users successfully move through the early funnel stages but there is noticeable drop-off between Checkout and Purchase.
-
-## Insight 2
-D1 retention remains strong while D7 retention shows long-term engagement decline.
-
-## Insight 3
-Certain acquisition channels outperform others in conversion efficiency.
-
-## Insight 4
-High-risk users represent a significant percentage of the customer base.
-
----
-
-# Experimentation Thinking
-
-Potential A/B Tests:
-1. Checkout UX redesign
-2. Incentive optimization
-3. Personalized onboarding
-4. Email retention campaigns
-5. Pricing strategy experiments
-
-Primary Metrics:
-- Conversion Rate
-- Checkout Completion
-- D7 Retention
-- Revenue Per User
-
-Guardrail Metrics:
-- Bounce Rate
-- Refund Rate
-- Churn Rate
-
----
-
-# Recommendations
-
-1. Optimize checkout flow to reduce abandonment
-2. Improve onboarding experience
-3. Launch retention-focused campaigns
-4. Personalize engagement for high-risk users
-5. Invest more heavily in high-converting channels
-
----
-
-# Decision Framework
-
-| Observation | Decision |
-|---|---|
-| Checkout abandonment is high | Prioritize checkout optimization |
-| D7 retention is weak | Improve long-term engagement strategy |
-| Certain channels outperform | Scale top-performing channels |
-| High-risk users increasing | Launch churn mitigation programs |
-
----
-
-# Business Impact
-
-Potential business outcomes:
-- Increased conversion rate
-- Improved retention
-- Reduced churn
-- Higher revenue per user
-- Improved product adoption
-- Better acquisition efficiency
-
----
-
-# Streamlit App
-
-The Streamlit app provides:
-- Interactive KPI monitoring
-- Dynamic filtering
+## SQL Transformations
+SQL scripts are included for:
 - Funnel analysis
-- Retention visualization
-- Revenue segmentation
-- Executive reporting
+- Retention trend analysis
+- Channel and segment performance
+- Churn risk analysis
 
+## Metrics Engineering
+Core metrics were engineered from customer-level and event-level data:
+- Distinct user counts by stage
+- Stage-to-stage drop-off
+- Awareness-to-purchase conversion
+- D1 and D7 retention
+- Revenue per user
+- Churn risk distribution
+
+## Analytics Workflow
+1. Clean and validate journey data.
+2. Build funnel stage logic using ordered stages.
+3. Calculate conversion, drop-off, retention, and revenue KPIs.
+4. Segment by country, device, customer segment, channel, and risk category.
+5. Convert findings into Insight → Action → Recommendation → Decision.
+
+## Product Insights
+- Users move successfully through early funnel stages.
+- Checkout-to-purchase remains a key friction point.
+- D1 retention is stronger than D7 retention, suggesting long-term engagement needs improvement.
+- Churn risk distribution should guide targeted retention campaigns.
+- Segment revenue differences can support better prioritization of growth investments.
+
+## Experimentation Thinking
+A strong next step is to run an A/B test on checkout optimization.
+
+**Control:** Current checkout experience  
+**Variant:** Faster checkout flow with improved UX, speed, and trust signals  
+**Primary Metric:** Purchase conversion rate  
+**Guardrail Metrics:** D1 retention, D7 retention, revenue per user, refund rate, support tickets  
+**Decision Rule:** Ship the variant if conversion improves without harming retention or revenue quality.
+
+## Recommendations
+1. Optimize checkout friction before increasing acquisition spend.
+2. Build targeted retention campaigns for high-risk users.
+3. Monitor D7 retention as the main product health signal.
+4. Invest more in channels and segments with stronger conversion and revenue quality.
+
+## Decision Framework
+| Decision Area | Recommendation | Expected Business Impact |
+|---|---|---|
+| Checkout Optimization | Improve UX, speed, and trust signals | Higher purchase conversion |
+| Retention | Target high-risk users with lifecycle messaging | Stronger D7 retention |
+| Growth Spend | Reallocate spend to better-performing channels | Better acquisition efficiency |
+| Segment Strategy | Prioritize revenue-generating customer segments | Higher revenue per user |
+
+## Business Impact
+This project demonstrates how a product analytics dashboard can turn raw journey data into business decisions around conversion, retention, risk, and growth prioritization.
+
+## Streamlit App
 Run locally:
 
 ```bash
+pip install -r requirements.txt
 streamlit run app/streamlit_app.py
 ```
 
----
-
-# Repo Architecture
-
+## Repo Architecture
 ```text
-customer-user-journey-analytics-platform/
-│
+customer-user-journey-dashboard-repo/
 ├── data/
+│   └── customer_user_journey.csv
 ├── sql/
+│   ├── 01_funnel_analysis.sql
+│   ├── 02_retention_analysis.sql
+│   ├── 03_channel_segment_analysis.sql
+│   └── 04_churn_risk_analysis.sql
 ├── notebooks/
+│   └── eda.ipynb
 ├── dashboard/
+│   └── tableau_dashboard_placeholder.md
 ├── screenshots/
+│   └── customer_user_journey_dashboard.png
 ├── app/
+│   ├── streamlit_app.py
+│   ├── components.py
+│   └── utils.py
 ├── docs/
+│   ├── business_case.md
+│   ├── dashboard_guide.md
+│   └── kpi_definitions.md
 ├── requirements.txt
-├── README.md
-└── .gitignore
+├── .gitignore
+└── README.md
 ```
 
----
-
-# Automation Awareness
-
-This repository follows a modern analytics workflow:
-- SQL transformations
-- KPI engineering
-- Dashboard automation
-- Reusable analytics pipelines
-- Streamlit deployment readiness
-
----
-
-# Future Improvements
-
-Future upgrades may include:
-- Predictive churn modeling
-- Real-time KPI pipelines
-- A/B testing framework integration
-- ML-powered customer segmentation
-- Recommendation systems
-- Cloud deployment
-
+## Future Improvements
+- Add cohort retention heatmap.
+- Add SQL-based data validation tests.
+- Add an experiment readout page.
+- Deploy Streamlit app publicly.
+- Add Tableau packaged workbook once finalized.

@@ -1,5 +1,5 @@
-pandas
-streamlit
-numpy
-matplotlib
-plotly
+pandas>=2.0
+streamlit>=1.35
+matplotlib>=3.8
+plotly>=5.20
+scikit-learn>=1.4
