@@ -103,17 +103,77 @@ detail = filtered.groupby(["customer_id", "country", "device_type", "customer_se
 st.dataframe(detail.sort_values("total_revenue", ascending=False), use_container_width=True)
 
 st.divider()
-st.header("Executive Decision Summary")
-col_a, col_b, col_c, col_d = st.columns(4)
-with col_a:
-    st.markdown("### Insight")
-    st.write("Users progress through early funnel stages, but checkout abandonment and lower D7 retention create growth leakage.")
-with col_b:
-    st.markdown("### Action")
-    st.write("Analyze checkout friction, monitor D7 retention, and identify high-risk users before they drop from the funnel.")
-with col_c:
-    st.markdown("### Recommendation")
-    st.write("Optimize checkout UX, improve trust signals, and run targeted retention campaigns for early-stage users.")
-with col_d:
-    st.markdown("### Decision")
-    st.write("Prioritize checkout-stage optimization and D7 retention improvement before scaling acquisition spend.")
+
+st.markdown("## Executive Decision Summary")
+
+st.markdown("""
+<style>
+.summary-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+.summary-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    color: #303342;
+}
+.summary-card {
+    padding: 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 210px;
+}
+.insight-card {
+    background-color: #E8F2FF;
+    color: #0057B8;
+}
+.action-card {
+    background-color: #FFFDE7;
+    color: #8A6500;
+}
+.recommendation-card {
+    background-color: #E6F7EC;
+    color: #087B32;
+}
+.decision-card {
+    background-color: #FDE7E9;
+    color: #B3262E;
+}
+</style>
+
+<div class="summary-container">
+
+<div>
+    <div class="summary-title">🔎 Insight</div>
+    <div class="summary-card insight-card">
+        Users progress through early funnel stages, but checkout abandonment and lower <b>D7 retention</b> create growth leakage.
+    </div>
+</div>
+
+<div>
+    <div class="summary-title">⚙️ Action</div>
+    <div class="summary-card action-card">
+        Analyze checkout friction, monitor <b>D7 retention</b>, and identify high-risk users before they drop from the funnel.
+    </div>
+</div>
+
+<div>
+    <div class="summary-title">✅ Recommendation</div>
+    <div class="summary-card recommendation-card">
+        Optimize checkout UX, improve trust signals, and run targeted retention campaigns for early-stage users.
+    </div>
+</div>
+
+<div>
+    <div class="summary-title">⭐ Decision</div>
+    <div class="summary-card decision-card">
+        Prioritize checkout-stage optimization and D7 retention improvement before scaling acquisition spend.
+    </div>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
