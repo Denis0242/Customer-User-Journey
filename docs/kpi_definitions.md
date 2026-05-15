@@ -1,33 +1,11 @@
 # KPI Definitions
 
-## Total Users
-Distinct count of `Customer ID`.
-
-**Current value:** 800
-
-## Conversion Rate
-Distinct customers reaching `Purchase` divided by distinct customers in `Awareness`.
-
-**Current value:** 25.00%
-
-## D1 Retention
-Average of `D1 Retained` at the user level.
-
-**Current value:** 66.62%
-
-## D7 Retention
-Average of `D7 Retained` at the user level.
-
-**Current value:** 36.62%
-
-## Revenue per User
-Total revenue divided by distinct users.
-
-**Current value:** $25.58
-
-## Drop-off Rate
-Percentage loss between each sequential funnel stage.
-
-```text
-Drop-off Rate = 1 - Current Stage Users / Previous Stage Users
-```
+| KPI | Definition | Business Meaning |
+|---|---|---|
+| Total Users | Distinct count of customer_id | Size of analyzed user base |
+| Conversion Rate | Purchase users / total users | Share of users reaching purchase |
+| D1 Retention | Users retained after 1 day / total users | Early product stickiness |
+| D7 Retention | Users retained after 7 days / total users | Longer-term engagement quality |
+| Revenue per User | Total revenue / total users | Average monetization per user |
+| Drop-off Rate | 1 - next stage users / current stage users | Funnel leakage between stages |
+| Churn Risk Distribution | Users grouped by churn_risk_category | Risk prioritization |

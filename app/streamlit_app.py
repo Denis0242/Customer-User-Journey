@@ -1,61 +1,119 @@
-import sys
+import streamlit as st
+import pandas as pd
+import plotly.express as px
 from pathlib import Path
 
-import pandas as pd
-import streamlit as st
-
-sys.path.append(str(Path(__file__).resolve().parent))
-from utils import load_data, compute_kpis, funnel_table
-from components import decision_panel
-
 st.set_page_config(page_title="Customer User Journey Dashboard", layout="wide")
-st.title("Customer User Journey Dashboard")
-st.caption("Product analytics case study: funnel conversion, retention, churn risk, and segment revenue")
 
-DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "customer_user_journey.csv"
-df = load_data(DATA_PATH)
+DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "cleaned_user_journey.csv"
+df = pd.read_csv(DATA_PATH)
+df["journey_date"] = pd.to_datetime(df["journey_date"], errors="coerce")
+
+st.title("Customer User Journey Dashboard")
+st.caption("Product Analytics | Funnel, Retention, Revenue, Churn Risk, and Executive Decision Support")
 
 with st.sidebar:
     st.header("Filters")
-    country = st.multiselect("Country", sorted(df["Country"].unique()), default=sorted(df["Country"].unique()))
-    segment = st.multiselect("Segment", sorted(df["Customer Segment"].unique()), default=sorted(df["Customer Segment"].unique()))
-    device = st.multiselect("Device", sorted(df["Device Type"].unique()), default=sorted(df["Device Type"].unique()))
-    risk = st.multiselect("Risk Category", sorted(df["Churn Risk Category"].unique()), default=sorted(df["Churn Risk Category"].unique()))
+    countries = st.multiselect("Country", sorted(df["country"].dropna().unique()), default=sorted(df["country"].dropna().unique()))
+    devices = st.multiselect("Device", sorted(df["device_type"].dropna().unique()), default=sorted(df["device_type"].dropna().unique()))
+    segments = st.multiselect("Segment", sorted(df["customer_segment"].dropna().unique()), default=sorted(df["customer_segment"].dropna().unique()))
+    channels = st.multiselect("Acquisition Channel", sorted(df["acquisition_channel"].dropna().unique()), default=sorted(df["acquisition_channel"].dropna().unique()))
+    risks = st.multiselect("Risk Category", sorted(df["churn_risk_category"].dropna().unique()), default=sorted(df["churn_risk_category"].dropna().unique()))
 
-filtered = df[df["Country"].isin(country) & df["Customer Segment"].isin(segment) & df["Device Type"].isin(device) & df["Churn Risk Category"].isin(risk)]
-kpis = compute_kpis(filtered)
+filtered = df[
+    df["country"].isin(countries) &
+    df["device_type"].isin(devices) &
+    df["customer_segment"].isin(segments) &
+    df["acquisition_channel"].isin(channels) &
+    df["churn_risk_category"].isin(risks)
+]
 
-cols = st.columns(5)
-cols[0].metric("Total Users", f"{kpis['Total Users']:,}")
-cols[1].metric("Conversion Rate", f"{kpis['Conversion Rate']:.2%}")
-cols[2].metric("D1 Retention", f"{kpis['D1 Retention']:.2%}")
-cols[3].metric("D7 Retention", f"{kpis['D7 Retention']:.2%}")
-cols[4].metric("Revenue per User", f"${kpis['Revenue per User']:,.2f}")
+user_level = filtered.sort_values("journey_date").drop_duplicates("customer_id")
+total_users = filtered["customer_id"].nunique()
+purchase_users = filtered.loc[filtered["funnel_stage"].str.lower() == "purchase", "customer_id"].nunique()
+conversion_rate = purchase_users / total_users if total_users else 0
+d1_retention = user_level["d1_retained"].mean() if len(user_level) else 0
+d7_retention = user_level["d7_retained"].mean() if len(user_level) else 0
+revenue_per_user = filtered["revenue"].sum() / total_users if total_users else 0
+
+c1, c2, c3, c4, c5 = st.columns(5)
+c1.metric("Total Users", f"{total_users:,}")
+c2.metric("Conversion Rate", f"{conversion_rate:.2%}")
+c3.metric("D1 Retention", f"{d1_retention:.2%}")
+c4.metric("D7 Retention", f"{d7_retention:.2%}")
+c5.metric("Revenue per User", f"${revenue_per_user:,.2f}")
 
 st.divider()
-left, right = st.columns(2)
-with left:
-    st.subheader("Funnel Stage Users")
-    ft = funnel_table(filtered)
-    st.bar_chart(ft.set_index("Funnel Stage")["Users"])
-with right:
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.subheader("Funnel Chart")
+    funnel = filtered.groupby(["funnel_stage_order", "funnel_stage"], as_index=False)["customer_id"].nunique().sort_values("funnel_stage_order")
+    fig = px.funnel(funnel, x="customer_id", y="funnel_stage", text="customer_id")
+    st.plotly_chart(fig, use_container_width=True)
+
+with col2:
+    st.subheader("Drop-off Analysis")
+    f = funnel.copy()
+    f["next_users"] = f["customer_id"].shift(-1)
+    f["dropoff_rate"] = 1 - (f["next_users"] / f["customer_id"])
+    f = f.dropna(subset=["dropoff_rate"])
+    f["stage_pair"] = f["funnel_stage"] + " → Next"
+    fig = px.bar(f, x="stage_pair", y="dropoff_rate", text=f["dropoff_rate"].map(lambda x: f"{x:.2%}"))
+    fig.update_yaxes(tickformat=".0%")
+    st.plotly_chart(fig, use_container_width=True)
+
+with col3:
     st.subheader("Retention Trend")
-    trend = filtered.groupby("Journey Date")[["D1 Retained", "D7 Retained"]].mean().sort_index()
-    st.line_chart(trend)
+    trend = filtered.groupby("journey_date", as_index=False).agg(d1_retention=("d1_retained", "mean"), d7_retention=("d7_retained", "mean"))
+    trend_long = trend.melt(id_vars="journey_date", value_vars=["d1_retention", "d7_retention"], var_name="metric", value_name="rate")
+    fig = px.line(trend_long, x="journey_date", y="rate", color="metric", markers=True)
+    fig.update_yaxes(tickformat=".0%")
+    st.plotly_chart(fig, use_container_width=True)
 
-left, mid, right = st.columns(3)
-with left:
+col4, col5, col6 = st.columns(3)
+with col4:
     st.subheader("Churn Risk Distribution")
-    st.bar_chart(filtered.groupby("Churn Risk Category")["Customer ID"].nunique())
-with mid:
+    risk = user_level.groupby("churn_risk_category", as_index=False)["customer_id"].nunique()
+    fig = px.pie(risk, names="churn_risk_category", values="customer_id", hole=0.45)
+    st.plotly_chart(fig, use_container_width=True)
+
+with col5:
     st.subheader("Conversion by Channel")
-    channel = filtered.groupby("Acquisition Channel")["Customer ID"].nunique()
-    st.bar_chart(channel)
-with right:
+    channel = filtered.groupby("acquisition_channel").agg(total_users=("customer_id", "nunique"), purchase_users=("converted_flag", "sum")).reset_index()
+    channel["conversion_rate"] = channel["purchase_users"] / channel["total_users"]
+    fig = px.bar(channel, x="acquisition_channel", y="conversion_rate", text=channel["conversion_rate"].map(lambda x: f"{x:.2%}"))
+    fig.update_yaxes(tickformat=".0%")
+    st.plotly_chart(fig, use_container_width=True)
+
+with col6:
     st.subheader("Revenue by Segment")
-    st.bar_chart(filtered.groupby("Customer Segment")["Revenue"].sum())
+    revenue = filtered.groupby("customer_segment", as_index=False)["revenue"].sum().sort_values("revenue", ascending=False)
+    fig = px.bar(revenue, x="customer_segment", y="revenue", text="revenue")
+    st.plotly_chart(fig, use_container_width=True)
 
-decision_panel()
+st.subheader("Customer Journey Detail Table")
+detail = filtered.groupby(["customer_id", "country", "device_type", "customer_segment", "acquisition_channel", "churn_risk_category"], as_index=False).agg(
+    latest_stage_order=("funnel_stage_order", "max"),
+    total_revenue=("revenue", "sum"),
+    d1_retained=("d1_retained", "max"),
+    d7_retained=("d7_retained", "max"),
+)
+st.dataframe(detail.sort_values("total_revenue", ascending=False), use_container_width=True)
 
-st.subheader("Dataset Preview")
-st.dataframe(filtered.head(50), use_container_width=True)
+st.divider()
+st.header("Executive Decision Summary")
+col_a, col_b, col_c, col_d = st.columns(4)
+with col_a:
+    st.markdown("### Insight")
+    st.write("Users progress through early funnel stages, but checkout abandonment and lower D7 retention create growth leakage.")
+with col_b:
+    st.markdown("### Action")
+    st.write("Analyze checkout friction, monitor D7 retention, and identify high-risk users before they drop from the funnel.")
+with col_c:
+    st.markdown("### Recommendation")
+    st.write("Optimize checkout UX, improve trust signals, and run targeted retention campaigns for early-stage users.")
+with col_d:
+    st.markdown("### Decision")
+    st.write("Prioritize checkout-stage optimization and D7 retention improvement before scaling acquisition spend.")
