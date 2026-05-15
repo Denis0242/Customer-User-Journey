@@ -117,9 +117,9 @@ Proceed with checkout-stage optimization before scaling acquisition spend, while
 
 This project supports executive product decisions by connecting funnel behavior, retention, revenue, and risk into one analytics system. It helps reduce abandonment, improve conversion, protect revenue, and guide retention investment.
 
-Repo Architecture
+## Repo Architecture
 
----
+```text
 customer-user-journey-dashboard-repo/
 ├── data/
 │   └── customer_user_journey.csv
@@ -145,8 +145,9 @@ customer-user-journey-dashboard-repo/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
----
+
 
 ## 13. Future Improvements
 
