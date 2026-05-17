@@ -1,0 +1,4 @@
+customer_segment,users,revenue,d1_retention,d7_retention
+High,220,9131,0.701,0.441
+Low,238,2758,0.749,0.457
+Medium,342,8578,0.759,0.47

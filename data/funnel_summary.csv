@@ -1,0 +1,6 @@
+funnel_stage_order,funnel_stage,users,conversion_from_previous,dropoff_from_previous
+1,Awareness,800,,
+2,Consideration,560,0.7,0.3
+3,Intent,400,0.714,0.286
+4,Checkout,280,0.7,0.3
+5,Purchase,200,0.714,0.286

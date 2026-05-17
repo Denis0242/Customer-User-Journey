@@ -1,0 +1,4 @@
+churn_risk_category,users,revenue,d1_retention,d7_retention
+High,188,5602,0.737,0.433
+Low,348,9115,0.759,0.474
+Medium,264,5750,0.718,0.455
