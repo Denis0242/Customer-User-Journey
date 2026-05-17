@@ -2,50 +2,90 @@
 
 ## Executive Summary
 
-This project analyzes customer journey behavior to help product, growth, and leadership teams improve funnel conversion, retention, and revenue outcomes.
+This project analyzes customer behavior across the full user journey to help **product, growth, and leadership teams improve conversion, retention, and revenue outcomes**.
 
-The dashboard evaluates funnel stage movement, D1/D7 retention, churn risk, acquisition channels, customer segments, and revenue performance to identify where users drop off and which groups create the strongest business value.
+The analysis evaluates **customer funnel progression, acquisition channels, customer segments, D1/D7 retention, churn-risk behavior, and revenue performance** to identify where customers drop off, which groups create the strongest business value, and what actions should be prioritized to improve product health.
 
-Insights from this analysis support decisions around funnel optimization, retention monitoring, acquisition investment, and churn-risk prioritization.
+The dashboard supports **product analytics and business decision-making** by helping teams:
 
-Expected impact includes improving funnel conversion by **5–10%**, increasing D7 retention by **3–7%**, and helping teams prioritize customer segments and channels with stronger revenue-per-user potential.
+- Identify high-friction funnel stages
+- Improve short-term retention performance
+- Prioritize higher-value acquisition channels
+- Reduce churn-risk exposure
+- Optimize customer segments with stronger revenue potential
 
-Built using **Tableau-style analytics, SQL, Python, Streamlit, and EDA**.
+Expected business value includes:
+
+- **5–10% improvement in funnel conversion**
+- **3–7% increase in D7 retention**
+- **Higher revenue-per-user optimization**
+- **Reduced churn-risk exposure**
+- **Faster product and leadership decision-making**
+
+This repository demonstrates end-to-end analytics capability through:
+
+**SQL • Tableau-style Analytics • Streamlit • Python • EDA • KPI Engineering • Product Analytics Thinking**
 
 ---
 
 ## Business Problem
 
-Product and growth teams need to understand where customers drop off across the journey and which segments, devices, channels, and churn-risk groups are most important for business performance.
+Product and growth teams often struggle to understand:
 
-This project answers:
+- Where customers drop off in the journey
+- Which customer groups generate the most value
+- Which acquisition channels create stronger retention
+- Which churn-risk groups require intervention
+- What decisions should be prioritized to improve product health
 
-- Where are users dropping off in the funnel?
-- Which customer segments generate the most revenue?
-- Which acquisition channels produce the strongest retention?
-- Which churn-risk groups require action?
-- What decision should leadership make to improve product health?
+Without visibility into the customer journey, organizations risk:
+
+- Losing customers during funnel progression
+- Investing in low-performing acquisition channels
+- Missing retention opportunities
+- Increasing churn exposure
+- Making slower business decisions without KPI visibility
+
+This project answers key business questions such as:
+
+### Funnel Analytics
+- Where do customers drop off most in the journey?
+- Which stage has the highest conversion friction?
+
+### Product & Retention Analytics
+- How healthy are D1 and D7 retention?
+- Which customer groups are retained longer?
+
+### Revenue & Customer Value
+- Which customer segments generate the highest revenue?
+- Which channels produce stronger revenue-per-user?
+
+### Churn-Risk Analytics
+- Which customer groups require immediate intervention?
+- How should churn-risk customers be prioritized?
 
 ---
 
 ## KPI Goals
 
 | KPI | Business Purpose |
-|---|---|
+|------|----------------|
 | Funnel Conversion Rate | Measures movement from awareness to purchase |
-| Drop-Off Rate | Identifies journey friction points |
+| Stage Drop-Off Rate | Identifies friction points in the customer journey |
 | D1 Retention | Measures immediate product stickiness |
 | D7 Retention | Measures short-term customer value |
 | Revenue | Measures monetization performance |
-| Revenue Per User | Compares channel and segment value |
-| Churn Risk Category | Prioritizes retention actions |
+| Revenue Per User (RPU) | Compares customer value by segment/channel |
+| Customer Segment Performance | Identifies high-value groups |
+| Churn Risk Category | Prioritizes retention intervention |
+| Acquisition Channel Performance | Evaluates channel quality |
 
 ---
 
 ## Dataset Overview
 
 | Item | Value |
-|---|---:|
+|------|------:|
 | Dataset | `user_realistic.csv` |
 | Rows | 2,240 |
 | Columns | 16 |
@@ -56,42 +96,31 @@ This project answers:
 | D7 Retention | 45.8% |
 | Overall Funnel Conversion | 25.0% |
 
----
+### Dataset Scope
 
-## EDA + Cleaning + Feature Engineering
+The dataset simulates a **realistic customer product journey**, including:
 
-The EDA workflow is documented in:
+- Funnel stage progression
+- Customer segmentation
+- Acquisition channels
+- Device behavior
+- Retention behavior
+- Revenue contribution
+- Churn-risk categorization
 
-```text
-notebooks/EDA_CLEANING_FEATURE_ENGINEERING.md
-notebooks/eda_cleaning_feature_engineering.ipynb
-```
-
-Cleaning steps include:
-
-1. Loaded customer journey data
-2. Standardized column names
-3. Converted journey date to datetime
-4. Checked missing values
-5. Removed duplicates
-6. Validated funnel stage order
-7. Validated retention flags
-8. Engineered conversion flag
-9. Engineered retention gap
-10. Created revenue band
-11. Exported final clean dataset
+This enables a complete **customer journey and product analytics evaluation**.
 
 ---
 
 ## Representative SQL Queries
 
-SQL file:
+SQL queries used for transformation and KPI analysis are included in:
 
 ```text
 sql/customer_user_journey_queries.sql
 ```
 
-### 1. Funnel Conversion and Drop-Off
+### 1. Funnel Conversion & Drop-Off Analysis
 
 ```sql
 SELECT
@@ -100,7 +129,8 @@ SELECT
     COUNT(DISTINCT customer_id) AS users,
     ROUND(
         COUNT(DISTINCT customer_id) * 1.0 /
-        LAG(COUNT(DISTINCT customer_id)) OVER (ORDER BY funnel_stage_order),
+        LAG(COUNT(DISTINCT customer_id))
+        OVER (ORDER BY funnel_stage_order),
         3
     ) AS conversion_from_previous
 FROM user_journey
@@ -108,7 +138,12 @@ GROUP BY funnel_stage_order, funnel_stage
 ORDER BY funnel_stage_order;
 ```
 
-### 2. Retention and Revenue by Segment
+**Purpose:**  
+Measures funnel conversion efficiency and identifies the largest customer drop-off stages.
+
+---
+
+### 2. Customer Segment Performance
 
 ```sql
 SELECT
@@ -122,21 +157,35 @@ GROUP BY customer_segment
 ORDER BY total_revenue DESC;
 ```
 
-### 3. Acquisition Channel Performance
+**Purpose:**  
+Identifies which customer groups drive stronger revenue and retention outcomes.
+
+---
+
+### 3. Acquisition Channel Effectiveness
 
 ```sql
 SELECT
     acquisition_channel,
     COUNT(DISTINCT customer_id) AS acquired_users,
     SUM(revenue) AS total_revenue,
-    ROUND(SUM(revenue) * 1.0 / COUNT(DISTINCT customer_id), 2) AS revenue_per_user,
+    ROUND(
+        SUM(revenue) * 1.0 /
+        COUNT(DISTINCT customer_id),
+        2
+    ) AS revenue_per_user,
     ROUND(AVG(d7_retained), 3) AS d7_retention_rate
 FROM user_journey
 GROUP BY acquisition_channel
 ORDER BY revenue_per_user DESC;
 ```
 
-### 4. Churn Risk Decision Signal
+**Purpose:**  
+Evaluates acquisition efficiency using revenue-per-user and retention performance.
+
+---
+
+### 4. Churn-Risk Decision Signal
 
 ```sql
 SELECT
@@ -150,57 +199,55 @@ GROUP BY churn_risk_category
 ORDER BY revenue_exposure DESC;
 ```
 
+**Purpose:**  
+Supports churn prioritization and intervention planning.
+
 ---
 
 ## Metrics Engineering
 
 | Metric | Formula |
-|---|---|
+|--------|---------|
 | Overall Conversion | Purchase Users / Awareness Users |
 | Stage Conversion | Current Stage Users / Previous Stage Users |
-| Drop-Off Rate | 1 - Stage Conversion |
-| D1 Retention | D1 Retained Users / Total Records |
-| D7 Retention | D7 Retained Users / Total Records |
+| Drop-Off Rate | 1 − Stage Conversion |
+| D1 Retention | D1 Retained Users / Total Users |
+| D7 Retention | D7 Retained Users / Total Users |
 | Revenue Per User | Total Revenue / Unique Customers |
-| Retention Gap | D1 Retention - D7 Retention |
+| Retention Gap | D1 Retention − D7 Retention |
 
----
+### KPI Engineering Focus
 
-## Analytics Workflow
+This project emphasizes **product analytics KPI thinking** through:
 
-```text
-Business Problem
-        ↓
-EDA + Cleaning
-        ↓
-Feature Engineering
-        ↓
-SQL Transformations
-        ↓
-Metrics Engineering
-        ↓
-Dashboard Build
-        ↓
-Insights
-        ↓
-Decision Support
-        ↓
-Business Impact
-```
+- Funnel conversion measurement
+- Retention monitoring
+- Revenue quality evaluation
+- Customer value segmentation
+- Churn prioritization
+- Product health tracking
 
 ---
 
 ## Dashboard Preview
 
-Dashboard screenshot files are included in:
+### Main Dashboard
 
-```text
-screenshots/
-├── dashboard_preview.png
-├── kpi_overview.png
-├── funnel_view.png
-└── segment_channel_view.png
-```
+![Customer User Journey Dashboard](screenshots/dashboard_preview.png)
+
+### Key Dashboard Views
+
+#### KPI Overview
+
+![KPI Overview](screenshots/kpi_overview.png)
+
+#### Funnel Performance View
+
+![Funnel View](screenshots/funnel_view.png)
+
+#### Segment & Channel Analysis
+
+![Segment Channel View](screenshots/segment_channel_view.png)
 
 ---
 
