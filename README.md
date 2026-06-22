@@ -45,7 +45,12 @@ Without visibility into the customer journey, organizations risk:
 - Missing retention opportunities
 - Increasing churn exposure
 - Making slower business decisions without KPI visibility
+---
+# Decision Support Use Case
 
+This dashboard helps business stakeholders analyze customer behavior across key touchpoints, identify conversion bottlenecks, evaluate engagement patterns, and support decisions that improve customer experience, conversion performance, and user journey optimization.
+
+---
 This project answers key business questions such as:
 
 ### Funnel Analytics
