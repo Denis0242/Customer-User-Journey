@@ -325,7 +325,7 @@ customer-user-journey/
 # How to Run the Project
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Denis0242/Customer-User-Journey
 
 pip install -r requirements.txt
 
