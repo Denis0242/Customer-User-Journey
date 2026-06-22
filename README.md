@@ -6,13 +6,13 @@
 
 This project analyzes customer behavior across the full user journey to help product, growth, and leadership teams improve conversion, retention, and revenue outcomes.
 
-The analysis evaluates customer funnel progression, acquisition channels, customer segments, retention performance, churn-risk behavior, and revenue contribution to identify where customers drop off, which groups create the strongest business value, and what actions should be prioritized to improve product health.
+The analysis evaluates customer funnel progression, acquisition channels, customer segments, retention performance, churn-risk behavior, and revenue contribution to identify where customers drop off, which groups create the strongest business value, and what actions should be prioritized to improve product performance.
 
 The dashboard supports product analytics and business decision-making by helping stakeholders:
 
 * Identify high-friction funnel stages
 * Improve customer retention performance
-* Prioritize higher-value acquisition channels
+* Prioritize high-value acquisition channels
 * Reduce churn-risk exposure
 * Optimize customer segments with stronger revenue potential
 
@@ -24,7 +24,7 @@ Expected business value includes:
 * Reduced churn-risk exposure
 * Faster data-driven decision-making
 
-This repository demonstrates end-to-end analytics capability through SQL, Python, Tableau-style analytics, Streamlit, KPI engineering, and business-focused product analytics.
+This project demonstrates end-to-end analytics capability through SQL, Python, Tableau, Streamlit, KPI engineering, and business-focused product analytics.
 
 ---
 
@@ -45,6 +45,8 @@ Without visibility into the customer journey, organizations risk:
 * Missing retention opportunities
 * Increasing churn exposure
 * Making slower business decisions
+
+This project was designed to provide a centralized customer journey analytics solution that transforms customer behavior data into actionable business insights.
 
 ---
 
@@ -111,7 +113,7 @@ The dashboard supports product, growth, and leadership teams by providing visibi
 
 The largest business opportunity exists between the Awareness and Purchase stages, where customer drop-off significantly reduces overall funnel conversion and contributes to weaker downstream retention performance.
 
-Additionally, the gap between D1 Retention (74.0%) and D7 Retention (45.8%) suggests opportunities to improve early customer engagement and long-term product adoption.
+The gap between D1 Retention (74.0%) and D7 Retention (45.8%) further indicates opportunities to improve onboarding effectiveness and long-term customer engagement.
 
 ---
 
@@ -151,7 +153,35 @@ Prioritize improvements at the highest drop-off funnel stages and implement targ
 
 ---
 
-# Representative SQL Queries
+# EDA + Feature Engineering
+
+The project includes exploratory data analysis, data validation, and feature engineering designed to improve customer journey analysis and retention monitoring.
+
+### Key Activities
+
+* Missing value validation
+* Duplicate checks
+* Funnel-stage validation
+* Customer journey sequencing
+* Retention calculations
+* Revenue aggregation
+* Churn-risk segmentation
+* Acquisition channel analysis
+
+### Engineered Features
+
+* funnel_stage_order
+* churn_risk_category
+* revenue_per_user
+* retention_gap
+* customer_segment
+* acquisition_channel_group
+
+These engineered features support customer journey analysis, retention monitoring, and business decision-making.
+
+---
+
+# SQL Queries
 
 SQL queries used for KPI calculations and business analysis are included in:
 
@@ -215,6 +245,32 @@ This project emphasizes:
 * Customer segmentation
 * Churn-risk prioritization
 * Product health measurement
+
+---
+
+# Analytics Workflow
+
+```text
+Business Problem
+        ↓
+EDA + Cleaning
+        ↓
+Feature Engineering
+        ↓
+Metrics Engineering
+        ↓
+SQL Transformations
+        ↓
+Customer Journey Analysis
+        ↓
+Dashboard Development
+        ↓
+Business Insights
+        ↓
+Decision Support
+        ↓
+Business Impact
+```
 
 ---
 
@@ -294,4 +350,3 @@ streamlit run app/streamlit_app.py
 * No real customer information is included.
 * Project developed for educational and demonstration purposes.
 * Business impact estimates are illustrative and intended to demonstrate analytical decision-making.
-
